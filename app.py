@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
 import os
 import time
-from langchain import OpenAI
+from langchain import OpenAI, PromptTemplate
 from langchain.docstore import document
 from langchain.chains.summarize import load_summarize_chain
+from langchain.text_splitter import CharacterTextSplitter
 from llama_index import download_loader
 from loguru import logger
 import openai
@@ -75,7 +76,7 @@ def get_ai_posts():
         try:
             if post["url"] is not None:
                 logger.info(f"{post['url']} with {post['points']} points and {post['num_comments']} comments")
-                #get_story_summary(post["url"])
+                logger.info(get_story_summary_2(post["url"]))
         except:
             logger.error("Error getting story summary for post {}", post["url"])
         time.sleep(1)
@@ -96,5 +97,25 @@ def get_story_summary(story_url):
     print(chain({"input_documents": docs}, return_only_outputs=True))
 
 
+def get_story_summary_2(story_url):
+    llm = OpenAI(temperature=0)
+
+    prompt_template = """The original text was scraped from a website, so first you need to check if the text is just a response stating that Javascript or cookies must be enabled. If it is, the output of your message should be "N/A". Also check if the text is related to AI, if it isn't write the ouput "N/AB" .Write a summary of the following:
+
+
+    {text}
+
+    If the summary isn't relevant to AI, just write "N/A" as the output.
+    """
+    PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
+    chain = load_summarize_chain(llm, chain_type="stuff", prompt=PROMPT)
+    text_splitter = CharacterTextSplitter()
+
+    texts = text_splitter.split_text(story_url)
+    docs = [document.Document(page_content=t) for t in texts[:3]]
+
+    return chain.run(input_documents=docs, lang='english', return_only_outputs=True)
+    
 if __name__ == "__main__":
     get_ai_posts()
+    #get_story_summary_2("https://python.langchain.com/en/latest/modules/chains/index_examples/summarize.html")
