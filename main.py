@@ -12,6 +12,7 @@ from loguru import logger
 import openai
 import requests
 
+MAX_DAYS = 7
 
 # Set up OpenAI authentication
 openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -48,7 +49,7 @@ ai_keywords = {
 
 def get_ai_posts():
     api_url = "https://hn.algolia.com/api/v1/search"
-    yesterday = datetime.now() - timedelta(days=1)
+    yesterday = datetime.now() - timedelta(days=MAX_DAYS)
     numeric_filters = f"created_at_i>{int(yesterday.timestamp())}"
     ai_posts = []
     
