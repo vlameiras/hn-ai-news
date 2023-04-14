@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f6f6ef;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6600;
+            margin-bottom: 20px;
+        }
+        .story {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .story:last-child {
+            border-bottom: none;
+        }
+        .story-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #3c3c3c;
+        }
+        a {
+            text-decoration: none;
+            color: #ff6600;
+        }
+        .story-summary {
+            margin-bottom: 10px;
+            color: #3c3c3c;
+        }
+        .story-footer {
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hacker News AI Digest</h1>
+        {% for article in articles %}
+        <div class="story">
+            <a href="{{ article.link }}" class="story-title">{{ article.title }}</a>
+            <p class="story-summary">{{ article.summary }}</p>
+            <p class="story-footer">
+                <a href="{{ article.link }}">Read the full article</a> | 
+                <a href="{{ article.hn_discussion_link }}">Join the HN discussion</a>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
